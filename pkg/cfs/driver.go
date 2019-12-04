@@ -8,20 +8,20 @@ import (
 )
 
 type driver struct {
-	csiDriver   *csicommon.CSIDriver
-	endpoint    string
-	cloudconfig string
+	csiDriver     *csicommon.CSIDriver
+	endpoint      string
+	cloudconfig   string
 	masterAddress string
-	ids *csicommon.DefaultIdentityServer
-	cs  *controllerServer
-	ns  *nodeServer
+	ids           *csicommon.DefaultIdentityServer
+	cs            *controllerServer
+	ns            *nodeServer
 
 	cap   []*csi.VolumeCapability_AccessMode
 	cscap []*csi.ControllerServiceCapability
 }
 
 const (
-	driverName = "csi-cfsplugin"
+	driverName = "csi.chubaofs.com"
 )
 
 var (
@@ -52,14 +52,14 @@ func NewDriver(nodeID, endpoint, masterAddress string) *driver {
 func NewControllerServer(d *driver) *controllerServer {
 	return &controllerServer{
 		DefaultControllerServer: csicommon.NewDefaultControllerServer(d.csiDriver),
-		masterAddress: d.masterAddress,
+		masterAddress:           d.masterAddress,
 	}
 }
 
 func NewNodeServer(d *driver) *nodeServer {
 	return &nodeServer{
 		DefaultNodeServer: csicommon.NewDefaultNodeServer(d.csiDriver),
-		masterAddress: d.masterAddress,
+		masterAddress:     d.masterAddress,
 	}
 }
 

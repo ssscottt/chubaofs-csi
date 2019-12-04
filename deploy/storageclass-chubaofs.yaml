@@ -1,0 +1,12 @@
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: cfs-sc
+provisioner: csi.chubaofs.com
+reclaimPolicy: Delete
+# volume name can be set in two ways:
+#  1 - pass volume name by parameter 'volName'(not recommended)
+# volName regex pattern: "^[a-zA-Z0-9_-]{3,256}$"
+# parameters:
+#   volName: cfs-csi-test
+#  2 - use pv name as volume name by default(recommended)

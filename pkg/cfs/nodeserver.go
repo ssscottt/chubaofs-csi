@@ -112,10 +112,10 @@ func (ns *nodeServer) NodePublishVolume(ctx context.Context, req *csi.NodePublis
 	var (
 		cmdErrChan = make(chan error)
 		cmdErr     error
-		cmd        = exec.Command("/usr/bin/cfs-client", "-c", fuseConfigPath)
+		cmd        = exec.Command("/cfs/bin/cfs-client", "-c", fuseConfigPath)
 	)
 	go func() {
-		glog.V(4).Infof("In background do /usr/bin/cfs-client -c %v", fuseConfigPath)
+		glog.V(4).Infof("In background do /cfs/bin/cfs-client -c %v", fuseConfigPath)
 		if err := cmd.Run(); err != nil {
 			glog.Errorf("cfs client exec is failed. err:%v", err)
 			cmdErrChan <- err
