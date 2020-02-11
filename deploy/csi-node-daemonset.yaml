@@ -25,8 +25,7 @@ spec:
           args:
             - --v=5
             - --csi-address=/csi/csi.sock
-            - --kubeconfig=/etc/k8s/kubecfg
-            - --kubelet-registration-path=/var/lib/kubelet/plugins/csi-cfsplugin/csi.sock
+            - --kubelet-registration-path=/var/lib/kubelet/plugins/csi.chubaofs.com/csi.sock
           env:
             - name: KUBE_NODE_NAME
               valueFrom:
@@ -40,8 +39,6 @@ spec:
               name: socket-dir
             - mountPath: /registration
               name: registration-dir
-            - name: kubecfg
-              mountPath: /etc/k8s
 
         - name: cfs-driver
           args:
@@ -74,7 +71,7 @@ spec:
 
       volumes:
         - hostPath:
-            path: /var/lib/kubelet/plugins/csi-cfsplugin
+            path: /var/lib/kubelet/plugins/csi.chubaofs.com
             type: DirectoryOrCreate
           name: socket-dir
         - hostPath:
@@ -89,6 +86,3 @@ spec:
             path: /export/Logs/cfs-node/
             type: DirectoryOrCreate
           name: log-dir
-        - configMap:
-            name: kubecfg
-          name: kubecfg

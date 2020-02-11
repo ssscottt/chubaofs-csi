@@ -50,7 +50,16 @@ spec:
             - --v=5
             - --endpoint=$(CSI_ENDPOINT)
             - --nodeid=$(KUBE_NODE_NAME)
+            - --drivername=csi.chubaofs.com
             - --masterAddress=$(MASTER_ADDRESS)
+          lifecycle:
+            preStop:
+              exec:
+                command: [
+                  "/bin/sh",
+                  "-c",
+                  "rm -rf /csi/csi.sock"
+                ]
           env:
             - name: MASTER_ADDRESS
               value: cfs.jd.com
@@ -74,7 +83,7 @@ spec:
 
       volumes:
         - hostPath:
-            path: /var/lib/kubelet/plugins/csi-cfsplugin
+            path: /var/lib/kubelet/plugins/csi.chubaofs.com
             type: DirectoryOrCreate
           name: socket-dir
         - hostPath:
