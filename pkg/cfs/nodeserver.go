@@ -21,6 +21,7 @@ import (
 	"os"
 	"os/exec"
 	"path"
+	"strings"
 
 	"github.com/container-storage-interface/spec/lib/go/csi/v0"
 	"golang.org/x/net/context"
@@ -78,12 +79,18 @@ func (ns *nodeServer) NodePublishVolume(ctx context.Context, req *csi.NodePublis
 
 	master := ns.masterAddress
 	volName := req.VolumeId
+	podUUID := strings.Split(targetPath, "/")
 
 	cfgmap := make(map[string]interface{})
 	cfgmap[FUSE_KEY_MOUNT_POINT] = targetPath
 	cfgmap[FUSE_KEY_VOLUME_NAME] = volName
 	cfgmap[FUSE_KEY_MASTER_ADDR] = master
-	cfgmap[FUSE_KEY_LOG_PATH] = "/export/Logs/"
+	logPath := "/export/Logs/" + podUUID[4] + "/" + volName + "/" + podUUID[7] + "/"
+	if err := os.MkdirAll(logPath, 0750); err != nil {
+		glog.Errorf("Create log path:%v failed. err:%v", logPath, err)
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+	cfgmap[FUSE_KEY_LOG_PATH] = logPath
 	//ump warn log, deprecated in release version
 	cfgmap[FUSE_KEY_LOG_UMP_WARN_LOG_DIR] = "/export/Logs/cfs/client/warn/"
 	cfgmap[FUSE_KEY_LOG_LEVEL] = "error"
@@ -105,7 +112,7 @@ func (ns *nodeServer) NodePublishVolume(ctx context.Context, req *csi.NodePublis
 		return &csi.NodePublishVolumeResponse{}, err
 	}
 
-	fuseConfigPath := CFS_FUSE_CONFIG_PATH + volName + "_fuse.json"
+	fuseConfigPath := CFS_FUSE_CONFIG_PATH + podUUID[4] + "/" + volName + "/" + podUUID[7] + "_fuse.json"
 	WriteBytes(fuseConfigPath, cfgstr)
 	glog.V(4).Infof("Parameters of cfs-client is %v", string(cfgstr))
 

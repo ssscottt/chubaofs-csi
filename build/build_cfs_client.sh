@@ -1,7 +1,7 @@
 #!/bin/sh
 
 RootPath=$(cd "$(dirname $0)";pwd)
-CfsClientVersion=1.4.0
+CfsClientVersion=1.5.1
 test -e ${RootPath}/bin/cfs-client && exit 0
 test -d ${RootPath}/chubaofs && rm -rf ${RootPath}/chubaofs
 git clone https://github.com/chubaofs/chubaofs.git && cd ${RootPath}/chubaofs && git checkout v${CfsClientVersion}

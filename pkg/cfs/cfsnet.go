@@ -8,7 +8,6 @@ import (
 	"net/http"
 )
 
-
 type CreateDeleteVolumeResponse struct {
 	Code int    `json:"code"`
 	Msg  string `json:"msg"`
@@ -16,7 +15,7 @@ type CreateDeleteVolumeResponse struct {
 }
 
 func CreateVolume(host string, volumeName string, volSizeGB int) error {
-	createVolUrl := fmt.Sprintf("http://%s/admin/createVol?name=%s&capacity=%v&owner=cfs", host, volumeName, volSizeGB)
+	createVolUrl := fmt.Sprintf("http://%s/admin/createVol?name=%s&capacity=%v&owner=cfs&followerRead=true", host, volumeName, volSizeGB)
 	glog.V(2).Infof("CFS: CreateVol url:%v", createVolUrl)
 
 	resp, err := http.Get(createVolUrl)
@@ -71,7 +70,7 @@ func DeleteVolume(host string, volumeName string) error {
 	glog.V(2).Infof("CFS: deleteVol response:%v", cfsDeleteVolumeResp)
 
 	if cfsDeleteVolumeResp.Code != 0 {
-		if cfsDeleteVolumeResp.Code == 7{
+		if cfsDeleteVolumeResp.Code == 7 {
 			glog.Warning("CFS: volume not exists, assuming the volume has already been deleted. code:%v, msg:%v", cfsDeleteVolumeResp.Code, cfsDeleteVolumeResp.Msg)
 			return nil
 		}
