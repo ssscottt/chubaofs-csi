@@ -30,7 +30,7 @@ import (
 const (
 	KEY_VOLUME_NAME               = "volName"
 	KEY_CFS_MASTER                = "cfsMaster"
-	CFS_FUSE_CONFIG_PATH          = "/etc/cfs/"
+	CFS_FUSE_CONFIG_PATH          = "/cfs/conf/"
 	FUSE_KEY_LOG_PATH             = "logDir"
 	FUSE_KEY_LOG_UMP_WARN_LOG_DIR = "warnLogDir"
 	FUSE_KEY_MASTER_ADDR          = "masterAddr"

@@ -85,14 +85,12 @@ func (ns *nodeServer) NodePublishVolume(ctx context.Context, req *csi.NodePublis
 	cfgmap[FUSE_KEY_MOUNT_POINT] = targetPath
 	cfgmap[FUSE_KEY_VOLUME_NAME] = volName
 	cfgmap[FUSE_KEY_MASTER_ADDR] = master
-	logPath := "/export/Logs/" + podUUID[4] + "/" + volName + "/" + podUUID[7] + "/"
+	logPath := "/cfs/logs/" + podUUID[4] + "/" + volName + "/" + podUUID[7] + "/"
 	if err := os.MkdirAll(logPath, 0750); err != nil {
 		glog.Errorf("Create log path:%v failed. err:%v", logPath, err)
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 	cfgmap[FUSE_KEY_LOG_PATH] = logPath
-	//ump warn log, deprecated in release version
-	cfgmap[FUSE_KEY_LOG_UMP_WARN_LOG_DIR] = "/export/Logs/cfs/client/warn/"
 	cfgmap[FUSE_KEY_LOG_LEVEL] = "error"
 	cfgmap[FUSE_KEY_LOOKUP_VALID] = "30"
 	cfgmap[FUSE_KEY_OWNER] = "cfs"
